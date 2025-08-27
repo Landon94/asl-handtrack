@@ -28,6 +28,15 @@ def main():
                                         mp_drawing_styles.get_default_hand_landmarks_style(),
                                         mp_drawing_styles.get_default_hand_connections_style()
                                         )
+                
+                height, width, _ = frame.shape
+                xs = [landmark.x * width for landmark in hand_landmarks.landmark]
+                ys = [landmark.y * height for landmark in hand_landmarks.landmark]
+                
+                x_min, x_max = int(min(xs)), int(max(xs))
+                y_min, y_max = int(min(ys)), int(max(ys))
+
+                cv2.rectangle(rgb_frame,pt1=(x_min-30,y_min-30),pt2=(x_max+30,y_max+30),color=(0,255,0),thickness=2)
 
         final_frame = cv2.cvtColor(rgb_frame, cv2.COLOR_RGB2BGR)
         cv2.imshow("image",cv2.flip(final_frame,1))
