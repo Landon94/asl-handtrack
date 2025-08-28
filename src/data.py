@@ -2,7 +2,6 @@ import kagglehub
 import os
 import tensorflow as tf
 
-AUTOTUNE = tf.data.AUTOTUNE
 
 def download_data() -> (str,str):
     path = kagglehub.dataset_download("lexset/synthetic-asl-alphabet")
@@ -38,10 +37,9 @@ def create_datasets(directory: str, image_size: (int,int), batch_size: int=32, s
         subset='validation',
     )
 
-    train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
-    val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
-
-    return train_ds,val_ds
+    class_names = list(train_ds.class_names)
+    
+    return train_ds,val_ds,class_names
 
 
 def create_test_dataset(directory: str, image_size: tuple[int, int], batch_size: int = 32, class_names: list[str] | None = None):
@@ -55,4 +53,4 @@ def create_test_dataset(directory: str, image_size: tuple[int, int], batch_size:
         image_size=image_size,
         shuffle=False,
     )
-    return test_ds.cache().prefetch(tf.data.AUTOTUNE)
+    return test_ds
