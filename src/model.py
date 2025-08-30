@@ -7,9 +7,14 @@ def create_model(input_size: tuple[int,int,int], num_classes: int=27) -> Model:
 
     model.add(Input(input_size))
 
-    model.add(Rescaling(1./255))        
-    model.add(RandomRotation(0.1))    
+    model.add(Input(IMAGE_SIZE + (3,)))        
+    model.add(RandomRotation(0.15))    
     model.add(RandomZoom(0.1))
+    model.add(RandomFlip("horizontal"))
+
+    model.add(Rescaling(1./255))
+    model.add(RandomContrast(0.2))
+    model.add(GaussianNoise(0.01))
     
     model.add(Conv2D(filters=32,kernel_size=(3,3),activation='relu'))
     # model.add(BatchNormalization())
