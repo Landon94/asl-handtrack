@@ -1,13 +1,11 @@
-from tensorflow.keras.layers import Dropout,Flatten,Conv2D,MaxPooling2D,Dense,Input,BatchNormalization,Rescaling,RandomRotation,RandomZoom
+from tensorflow.keras.layers import Dropout,Flatten,Conv2D,MaxPooling2D,Dense,Input,BatchNormalization,Rescaling,RandomRotation,RandomZoom,GaussianNoise,RandomFlip,RandomContrast
 from tensorflow.keras import Model, Sequential
 
 
 def create_model(input_size: tuple[int,int,int], num_classes: int=27) -> Model:
     model = Sequential()
 
-    model.add(Input(input_size))
-
-    model.add(Input(IMAGE_SIZE + (3,)))        
+    model.add(Input(input_size)) 
     model.add(RandomRotation(0.15))    
     model.add(RandomZoom(0.1))
     model.add(RandomFlip("horizontal"))
