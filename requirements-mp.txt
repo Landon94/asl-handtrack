@@ -3,3 +3,4 @@ protobuf>=4.25.3,<5
 opencv-python==4.8.1.78
 mediapipe==0.10.14
 tensorflow==2.15.1
+huggingface_hub
