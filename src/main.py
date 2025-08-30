@@ -11,7 +11,6 @@ CLASS_NAMES = [
     "U","V","W","X","Y","Z",
 ]
 
-
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -23,7 +22,7 @@ def main():
     hand = mp_hands.Hands()
 
     model = create_model((180,180,3))
-    model.load_weights("asl_cnn.h5")
+    model.load_weights("asl_cnn2.h5")
 
     while True:
 
@@ -45,32 +44,47 @@ def main():
                 xs = [landmark.x * width for landmark in hand_landmarks.landmark]
                 ys = [landmark.y * height for landmark in hand_landmarks.landmark]
                 
+                #Gets furthest corner points for hand detection
                 x_min, x_max = int(min(xs)), int(max(xs))
                 y_min, y_max = int(min(ys)), int(max(ys))
 
-                cropped_roi = frame[y_min-100:y_max+100, x_min-100:x_max+100]
+
+                def bounded_padding(x_min,y_min,x_max,y_max,w,h,pad):
+                    x0 = np.clip(x_min-pad,0,w)
+                    y0 = np.clip(y_min-pad,0,h)
+                    x1 = np.clip(x_max+pad,0,w)
+                    y1 = np.clip(y_max+pad,0,h)
+
+                    return x0,y0,x1,y1
+
+
+                x0,y0,x1,y1 = bounded_padding(x_min,y_min,x_max,y_max,width,height,100)
+    
+                cropped_roi = frame[y0:y1,x0:x1]
 
                 roi_rgb = cv2.cvtColor(cropped_roi, cv2.COLOR_BGR2RGB)
 
+                #Resize image and expand dimensions to fit expected input of model
                 resized_frame = cv2.resize(roi_rgb,(180,180),interpolation=cv2.INTER_AREA)
                 resized_frame = np.expand_dims(resized_frame, axis=0)
 
-                cv2.imshow("ROI", cropped_roi)
+                # cv2.imshow("ROI", cropped_roi)
     
                 preds = model.predict(resized_frame)
-                cls_idx = int(np.argmax(preds[0]))
-                conf = float(np.max(preds[0]))
-                # print(predictions)
+                cls_idx = int(np.argmax(preds,axis=1))
+                conf = float(np.max(preds,axis=1))
 
                 label = CLASS_NAMES[cls_idx]
-                # print(label)
-                # print(f"{cls_idx=} {conf=:.3f}")
 
+                #Draw rectangle around detected had
                 cv2.rectangle(rgb_frame,pt1=(x_min-30,y_min-30),pt2=(x_max+30,y_max+30),color=(0,255,0),thickness=2)
+                #Put prediction above bounding box
                 cv2.putText(rgb_frame,label,(x_min-50,y_min-50),cv2.FONT_HERSHEY_SIMPLEX,2.0,(255,0,0),3,cv2.LINE_AA)
 
         final_frame = cv2.cvtColor(rgb_frame, cv2.COLOR_RGB2BGR)
-        cv2.imshow("image",cv2.flip(final_frame,1))
+        
+        # cv2.imshow("image",cv2.flip(final_frame,1))
+        cv2.imshow("image",final_frame)
 
         if cv2.waitKey(1) & 0xFF == 27:
             break
