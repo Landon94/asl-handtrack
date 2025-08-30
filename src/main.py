@@ -4,6 +4,7 @@ import mediapipe as mp
 import numpy as np
 import tensorflow as tf
 from model import create_model
+from huggingface_hub import hf_hub_download
 
 CLASS_NAMES = [
     "A","B","Blank","C","D","E","F","G","H","I","J",
@@ -17,12 +18,20 @@ mp_hands = mp.solutions.hands
 
 cap = cv2.VideoCapture(1)
 
+FILENAME  = "asl_cnn2.h5"
+REPO_ID = "Lando89/asl_handtrack_cnn"         
+
+weights_path = hf_hub_download(
+    repo_id=REPO_ID,
+    filename=FILENAME,
+    repo_type="model",
+)
+
 def main():
 
     hand = mp_hands.Hands()
-
     model = create_model((180,180,3))
-    model.load_weights("asl_cnn2.h5")
+    model.load_weights(weights_path)
 
     while True:
 
@@ -70,7 +79,7 @@ def main():
 
                 # cv2.imshow("ROI", cropped_roi)
     
-                preds = model.predict(resized_frame)
+                preds = model.predict(resized_frame,verbose=0)
                 cls_idx = int(np.argmax(preds,axis=1))
                 conf = float(np.max(preds,axis=1))
 
