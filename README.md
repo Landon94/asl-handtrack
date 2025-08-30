@@ -2,6 +2,29 @@
 
 ## Overview
 
+**ASL-HandTrack** uses Google’s MediaPipe to detect and track hands in real time, and feeds the an image of the hands to a CNN trained on an ASL alphabet dataset to predict the signed letter.
+
+> Note: This project is intened for learning and experimentation only.
+
+## Demo
+
+
+```Bash
+#Create new environment
+python3 -m venv .venv-mp
+source .venv-mp/bin/activate
+
+#Install dependencies
+pip install -r requirements-mp.txt
+
+#Run
+python3 main.py
+```
+
+Example
+
+<img width="375" height="295" alt="Image" src="https://github.com/user-attachments/assets/67321606-21eb-4201-8c05-6c22c33d8fdf" />
+
 ## Dataset
 
 This project uses the **Synthetic ASL Alphabet** dataset by [Lexset](https://www.kaggle.com/datasets/lexset/synthetic-asl-alphabet).  
