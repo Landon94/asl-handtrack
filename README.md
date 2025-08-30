@@ -1,12 +1,11 @@
 # asl-handtrack
 
-##Overview
+## Overview
 
 ## Dataset
 
 This project uses the **Synthetic ASL Alphabet** dataset by [Lexset](https://www.kaggle.com/datasets/lexset/synthetic-asl-alphabet).  
 It contains 27,000 synthetic images of American Sign Language alphabet signs generated with Lexset's Seahaven platform.
-
 
 ## CNN Architecture
 
@@ -31,3 +30,9 @@ It contains 27,000 synthetic images of American Sign Language alphabet signs gen
 - **Purpose:** Makes final prediction or classifaction for network
 
 ## Model Evaluation
+
+### Confusion Matrix
+<img width="3322" height="2921" alt="Image" src="https://github.com/user-attachments/assets/6a8bb303-07cd-4ba1-992d-988d720e4768" />
+
+### Classification Report
+<img width="573" height="611" alt="Image" src="https://github.com/user-attachments/assets/aff6ecd0-706d-4137-8a48-a3c961d2a597" />
